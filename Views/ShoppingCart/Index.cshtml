@@ -1,0 +1,42 @@
+﻿@model ShoppingCart
+
+<h2>Your Cart</h2>
+
+@if (Model.Items.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Images</th>
+                <th>Total</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Price</td>
+                    <td><img src="@item.ImageUrl" alt="@item.Name" style="max-width: 100px;"></td>
+                    <td>@(item.Price * item.Quantity)</td>
+                    <td>
+                        <form asp-action="RemoveFromCart" asp-route-productId="@item.ProductId">
+                            <button type="submit" class="btn btn-danger">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Your cart is empty.</p>
+}
+
+<a asp-action="Checkout" class="btn btn-primary">Hoàn tất thủ tục đặt hàng</a>
