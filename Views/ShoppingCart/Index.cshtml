@@ -4,35 +4,38 @@
 
 @if (Model.Items.Any())
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Images</th>
-                <th>Total</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Items)
-            {
+    <form id="updateCartForm" asp-action="UpdateCart" method="post">
+        <table id="cartTable" class="table">
+            <thead>
                 <tr>
-                    <td>@item.Name</td>
-                    <td>@item.Quantity</td>
-                    <td>@item.Price</td>
-                    <td><img src="@item.ImageUrl" alt="@item.Name" style="max-width: 100px;"></td>
-                    <td>@(item.Price * item.Quantity)</td>
-                    <td>
-                        <form asp-action="RemoveFromCart" asp-route-productId="@item.ProductId">
-                            <button type="submit" class="btn btn-danger">Remove</button>
-                        </form>
-                    </td>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Image</th>
+                    <th>Total</th>
+                    <th>Action</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr class="cart-item">
+                        <td>@item.Name</td>
+                        <td>
+                            <input type="number" name="quantity" value="@item.Quantity" min="1" max="100" data-price="@item.Price">
+                            <input type="hidden" name="productId" value="@item.ProductId">
+                        </td>
+                        <td>@item.Price</td>
+                        <td><img src="@item.ImageUrl" alt="@item.Name" style="max-width: 100px;"></td>
+                        <td class="total-price">@item.Price * item.Quantity</td>
+                        <td>
+                            <a asp-action="RemoveFromCart" asp-route-productId="@item.ProductId" class="btn btn-danger">Remove</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </form>
 }
 else
 {
@@ -40,3 +43,20 @@ else
 }
 
 <a asp-action="Checkout" class="btn btn-primary">Hoàn tất thủ tục đặt hàng</a>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var cartItems = document.querySelectorAll(".cart-item");
+            cartItems.forEach(function (item) {
+                var input = item.querySelector("input[type='number']");
+                input.addEventListener("input", function () {
+                    var price = parseFloat(input.getAttribute("data-price"));
+                    var quantity = parseInt(input.value);
+                    var totalPrice = price * quantity;
+                    item.querySelector(".total-price").textContent = totalPrice.toFixed(2);
+                });
+            });
+        });
+    </script>
+}

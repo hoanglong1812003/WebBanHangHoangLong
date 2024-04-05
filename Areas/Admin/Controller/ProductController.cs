@@ -135,6 +135,7 @@ namespace WebBanHangHoangLong.Areas.Admin.Controllers
             return View(product);
         }
         // Hiển thị form xác nhận xóa sản phẩm
+
         public async Task<IActionResult> Delete(int id)
         {
             var product = await _productRepository.GetByIdAsync(id);

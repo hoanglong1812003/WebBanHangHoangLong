@@ -71,6 +71,7 @@ namespace WebBanHangHoangLong.Controllers
 
             return RedirectToAction("Index");
         }
+
         public IActionResult Index()
         {
             var cart = HttpContext.Session.GetObjectFromJson<ShoppingCart>("Cart") ?? new
